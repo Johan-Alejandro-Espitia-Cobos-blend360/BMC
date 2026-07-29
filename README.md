@@ -32,6 +32,23 @@ reemplaza, como guía de la conversión.
 
 ## Estado del proyecto
 
-Estructura inicial (skeleton). La implementación de cada recurso se hace de
-forma incremental, validando fidelidad contra los templates CloudFormation
-originales.
+Recursos implementados y validados con `terraform fmt` + `terraform validate`
+(sin backend, sin `apply`). Pendiente: aplicar `bootstrap/`, aplicar el stack
+principal e importar/cortar desde el stack CloudFormation actual.
+
+## Uso
+
+```bash
+# 1. Backend remoto (una sola vez)
+cd terraform/bootstrap
+terraform init
+terraform apply -var="state_bucket_name=<nombre-unico-global>"
+
+# 2. Stack principal
+cd ../
+cp backend.hcl.example backend.hcl   # completar con los outputs del paso 1
+terraform init -backend-config=backend.hcl
+cp terraform.tfvars.example terraform.tfvars   # completar ImageUri, BucketName, etc.
+terraform plan
+terraform apply
+```
