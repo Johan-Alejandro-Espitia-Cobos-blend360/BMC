@@ -1,0 +1,10 @@
+# Copia a backend.hcl (no versionado) y ajusta con los outputs de
+# terraform/bootstrap.
+#
+#   terraform init -backend-config=backend.hcl
+
+bucket         = "<state_bucket_name-del-bootstrap>"
+key            = "bmc/langflow-ecs/terraform.tfstate"
+region         = "<aws_region>"
+dynamodb_table = "<lock_table_name-del-bootstrap>"
+encrypt        = true

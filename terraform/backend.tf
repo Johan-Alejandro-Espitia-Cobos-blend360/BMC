@@ -1,13 +1,12 @@
-# Backend remoto (S3 + DynamoDB lock). El bucket y la tabla se crean una sola
-# vez desde bootstrap/. Los valores de bucket/key/region/dynamodb_table se
-# completan cuando bootstrap/ esté aplicado.
+# Backend remoto (S3 + DynamoDB lock), configuración parcial: los valores
+# concretos (bucket, tabla, región) se pasan en el init para no hardcodear
+# nombres específicos del entorno en el código versionado.
 #
-# terraform {
-#   backend "s3" {
-#     bucket         = ""
-#     key            = "bmc/terraform.tfstate"
-#     region         = ""
-#     dynamodb_table = ""
-#     encrypt        = true
-#   }
-# }
+#   terraform init -backend-config=backend.hcl
+#
+# Ver backend.hcl.example. bucket/dynamodb_table deben coincidir con los
+# outputs de terraform/bootstrap una vez aplicado.
+
+terraform {
+  backend "s3" {}
+}
