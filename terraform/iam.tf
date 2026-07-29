@@ -3,6 +3,11 @@
 # los secretos de BD y superusuario). Equivalente a TaskRole/ExecutionRole en
 # cloudformation/langflow-ecs.yaml.
 
+locals {
+  # "us.anthropic.claude-sonnet-4-5-20250929-v1:0" -> "anthropic.claude-sonnet-4-5-20250929-v1:0"
+  bedrock_inference_underlying_model_id = trimprefix(var.bedrock_inference_profile_id, "us.")
+}
+
 data "aws_iam_policy_document" "ecs_tasks_assume_role" {
   statement {
     effect  = "Allow"
@@ -42,6 +47,29 @@ data "aws_iam_policy_document" "task_permissions" {
     ]
     resources = [
       "arn:${data.aws_partition.current.partition}:bedrock:${var.aws_region}::foundation-model/${var.bedrock_model_id}"
+    ]
+  }
+
+  # GAP PREEXISTENTE (no introducido por la conversión a Terraform): el
+  # componente Amazon Bedrock del flujo importado (flow/BMC-aws.json) invoca
+  # el inference profile cross-region "us.anthropic.claude-sonnet-4-5-*",
+  # distinto al modelo que autoriza BedrockInvokeClaude3Sonnet arriba (que sí
+  # replica fielmente el parámetro BedrockModelId del CFN original). Sin este
+  # statement adicional, el flujo falla con AccessDeniedException al llegar a
+  # Bedrock. Se agrega sin modificar el statement original.
+  statement {
+    sid    = "BedrockInvokeInferenceProfile"
+    effect = "Allow"
+    actions = [
+      "bedrock:InvokeModel",
+      "bedrock:InvokeModelWithResponseStream",
+    ]
+    resources = [
+      # El profile en sí.
+      "arn:${data.aws_partition.current.partition}:bedrock:${var.aws_region}:${data.aws_caller_identity.current.account_id}:inference-profile/${var.bedrock_inference_profile_id}",
+      # Los modelos regionales subyacentes a los que el profile enruta
+      # (requisito de Bedrock para inference profiles cross-region).
+      "arn:${data.aws_partition.current.partition}:bedrock:*::foundation-model/${local.bedrock_inference_underlying_model_id}",
     ]
   }
 

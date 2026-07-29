@@ -70,6 +70,18 @@ variable "bedrock_model_id" {
   default     = "anthropic.claude-3-sonnet-20240229-v1:0"
 }
 
+variable "bedrock_inference_profile_id" {
+  type        = string
+  description = <<-EOT
+    Id del inference profile cross-region de Bedrock que usa el componente
+    Amazon Bedrock del flujo importado (flow/BMC-aws.json). No forma parte
+    del template CloudFormation original (que solo autorizaba
+    bedrock_model_id); se agrega para que el flujo ya existente pueda
+    invocar Bedrock con éxito.
+  EOT
+  default     = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+}
+
 variable "task_cpu" {
   type        = number
   description = "Unidades de CPU de la tarea Fargate."

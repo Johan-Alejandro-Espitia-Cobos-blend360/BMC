@@ -1,7 +1,13 @@
-# DB Subnet Group + instancia RDS PostgreSQL 16.6 privada. Equivalente a
+# DB Subnet Group + instancia RDS PostgreSQL privada. Equivalente a
 # DbSubnetGroup/Database en cloudformation/langflow-ecs.yaml (DeletionPolicy/
 # UpdateReplacePolicy: Delete -> skip_final_snapshot = true, sin snapshot
 # final, igual que hace CFN).
+#
+# DESVIACIÓN NECESARIA: el template CFN original fija EngineVersion "16.6",
+# pero esa versión fue retirada del catálogo de AWS (ya no es instanciable en
+# ninguna cuenta). Se usa "16.9" -- la versión 16.x disponible más cercana por
+# encima de 16.6 -- para preservar la intención original (misma línea major,
+# con los parches que 16.6 ya habría incluido).
 
 resource "aws_db_subnet_group" "this" {
   description = "Subredes privadas para RDS de Langflow."
@@ -13,7 +19,7 @@ resource "aws_db_subnet_group" "this" {
 
 resource "aws_db_instance" "this" {
   engine         = "postgres"
-  engine_version = "16.6"
+  engine_version = "16.9"
   instance_class = var.db_instance_class
 
   db_name  = "langflow"
