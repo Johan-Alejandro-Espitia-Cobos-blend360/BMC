@@ -1,0 +1,15 @@
+# Copia este archivo a terraform.tfvars y ajusta los valores.
+# terraform.tfvars NO se versiona (ver .gitignore).
+#
+# Equivalente a cloudformation/parameters.example.json
+
+image_uri           = "<account>.dkr.ecr.<region>.amazonaws.com/langflow-idp:latest"
+bucket_name         = "langflow-tmp-s3-<sufijo-unico>"
+retention_days      = 7
+bedrock_model_id    = "anthropic.claude-3-sonnet-20240229-v1:0"
+task_cpu            = 1024
+task_memory_mib     = 2048
+cpu_architecture    = "X86_64"
+db_instance_class   = "db.t3.micro"
+superuser           = "admin@example.com"
+vpc_cidr            = "10.0.0.0/16"
