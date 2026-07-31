@@ -50,3 +50,13 @@ resource "aws_secretsmanager_secret_version" "langflow_db_url" {
   secret_id     = aws_secretsmanager_secret.langflow_db_url.id
   secret_string = "postgresql://langflow:${random_password.db.result}@${aws_db_instance.this.address}:${aws_db_instance.this.port}/langflow"
 }
+
+# API key que usa la Lambda de disparo por S3 (lambda.tf) para llamar al
+# endpoint del flujo. A diferencia de las credenciales de arriba, Terraform
+# NO puede generar este valor: las API keys de Langflow solo se crean desde
+# la propia aplicación (API/UI) una vez que el superusuario existe. Se crea
+# el secreto vacío aquí; el valor se carga en un paso posterior con
+# `aws secretsmanager put-secret-value` (ver README).
+resource "aws_secretsmanager_secret" "s3_trigger_api_key" {
+  description = "API key de Langflow usada por la Lambda de disparo por S3 (${var.stack_name}-s3-trigger)."
+}

@@ -130,3 +130,15 @@ variable "vpc_cidr" {
   description = "Bloque CIDR de la VPC."
   default     = "10.0.0.0/16"
 }
+
+# --- Carga de documentos por evento S3 (no forma parte del CFN original) ---
+
+variable "langflow_flow_id" {
+  type        = string
+  description = <<-EOT
+    Id del flujo importado en Langflow (impreso por flow/import_flow.sh) que
+    la Lambda de disparo por S3 invoca via /api/v1/run/<id>. No puede tener
+    un default porque se genera al importar el flujo, después de que
+    Langflow ya está corriendo.
+  EOT
+}

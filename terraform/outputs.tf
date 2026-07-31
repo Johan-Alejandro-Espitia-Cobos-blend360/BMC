@@ -47,3 +47,20 @@ output "db_url_secret_arn" {
   description = "ARN del secreto con LANGFLOW_DATABASE_URL."
   value       = aws_secretsmanager_secret.langflow_db_url.arn
 }
+
+# --- Carga de documentos por evento S3 (no forma parte del CFN original) ---
+
+output "documents_inbox_bucket_name" {
+  description = "Bucket donde subir documentos (prefijo inbox/) y consultar resultados (prefijo results/)."
+  value       = aws_s3_bucket.documents_inbox.bucket
+}
+
+output "s3_trigger_lambda_name" {
+  description = "Nombre de la Lambda que conecta el bucket de buzón con el flujo Langflow."
+  value       = aws_lambda_function.s3_trigger.function_name
+}
+
+output "s3_trigger_api_key_secret_arn" {
+  description = "ARN del secreto donde debe cargarse la API key de Langflow para la Lambda (put-secret-value manual, ver README)."
+  value       = aws_secretsmanager_secret.s3_trigger_api_key.arn
+}

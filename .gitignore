@@ -16,3 +16,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 *.plan
+
+## Lambda (empaquetado, no código fuente)
+terraform/lambda/*.zip

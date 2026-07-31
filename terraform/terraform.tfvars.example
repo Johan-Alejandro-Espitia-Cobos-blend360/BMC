@@ -13,3 +13,7 @@ cpu_architecture    = "X86_64"
 db_instance_class   = "db.t3.micro"
 superuser           = "admin@example.com"
 vpc_cidr            = "10.0.0.0/16"
+
+# No forma parte del template CloudFormation original. Se obtiene después
+# de importar el flujo con flow/import_flow.sh (imprime el FLOW_ID).
+langflow_flow_id    = "<flow-id-impreso-por-import_flow.sh>"
