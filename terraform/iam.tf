@@ -90,6 +90,21 @@ data "aws_iam_policy_document" "task_permissions" {
     actions   = ["s3:ListBucket"]
     resources = [aws_s3_bucket.textract.arn]
   }
+
+  # Requisito documentado por AWS para que la cuenta pueda suscribirse
+  # automáticamente a modelos de terceros (Anthropic) en Bedrock la primera
+  # vez que se invocan (AWS Marketplace agreement). No sustituye la
+  # aceptación del EULA del modelo, que es un paso a nivel de cuenta.
+  statement {
+    sid    = "BedrockMarketplaceModelSubscription"
+    effect = "Allow"
+    actions = [
+      "aws-marketplace:Subscribe",
+      "aws-marketplace:Unsubscribe",
+      "aws-marketplace:ViewSubscriptions",
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "task_permissions" {

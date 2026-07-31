@@ -46,6 +46,14 @@ resource "aws_ecs_task_definition" "langflow" {
         { name = "TEXTRACT_BUCKET", value = var.bucket_name },
         { name = "AWS_REGION", value = var.aws_region },
         { name = "CLIENT_MAX_BODY_SIZE", value = "100M" },
+        # No forma parte del template CloudFormation original. El código del
+        # componente Amazon Bedrock embebido en el flujo importado
+        # (flow/BMC-aws.json) ignora el campo "Model ID" del propio nodo y
+        # siempre lee el modelo a invocar desde esta variable de entorno
+        # (con un default hardcodeado si no está definida). Se agrega para
+        # controlar el modelo desde infraestructura, sin tocar el código del
+        # componente.
+        { name = "BEDROCK_MODEL_ID", value = var.bedrock_inference_profile_id },
       ]
 
       secrets = [
